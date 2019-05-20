@@ -3,6 +3,11 @@
 
 [基础篇：带你从头到尾玩转注解](https://blog.csdn.net/dd864140130/article/details/53875814)
 
+
+[https://joyrun.github.io/2016/07/19/AptHelloWorld/](https://joyrun.github.io/2016/07/19/AptHelloWorld/)
+
+推荐阅读dagger2、dbflow、ButterKnife等基于apt的开源项目代码。JavaPoet 也有很多例子可以学习。
+
 [javapoet github地址](https://github.com/square/javapoet)
 
 # 一、创建 annotation 的 Java 模块并配置
@@ -377,3 +382,43 @@ public interface VariableElement extends Element {
 
 ```
 
+# Elements :
+
+[文档](http://tool.oschina.net/uploads/apidocs/jdk-zh/javax/lang/model/util/Elements.html)
+
+``` 
+public interface Elements {
+    PackageElement getPackageElement(CharSequence var1);
+
+    TypeElement getTypeElement(CharSequence var1);
+
+    Map<? extends ExecutableElement, ? extends AnnotationValue> 
+                getElementValuesWithDefaults(AnnotationMirror var1);
+
+    String getDocComment(Element var1);
+
+    boolean isDeprecated(Element var1);
+
+    Name getBinaryName(TypeElement var1);
+
+    PackageElement getPackageOf(Element var1);
+
+    //返回类型元素的所有成员，不管是继承的还是直接声明的。
+    List<? extends Element> getAllMembers(TypeElement var1);
+
+    //返回元素的所有注释，不管是继承的还是直接存在的。
+    List<? extends AnnotationMirror> getAllAnnotationMirrors(Element var1);
+
+    boolean hides(Element var1, Element var2);
+
+    boolean overrides(ExecutableElement var1, ExecutableElement var2, TypeElement var3);
+
+    String getConstantExpression(Object var1);
+
+    void printElements(Writer var1, Element... var2);
+
+    Name getName(CharSequence var1);
+
+    boolean isFunctionalInterface(TypeElement var1);
+}
+```
