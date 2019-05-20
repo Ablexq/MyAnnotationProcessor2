@@ -232,11 +232,11 @@ public interface RoundEnvironment {
 
 ![](imgs/element.png)
 
-PackageElement：代表一个包名。
-TypeElement：代表一个类、接口、枚举。
-ExecuteableElement：可以表示一个普通方法、构造方法、初始化方法（静态和实例）。
-VariableElement：代表一个字段、枚举常量、方法或构造方法的参数、本地变量、或异常参数等。
-Element：上述所有元素的父接口，代表源码中的每一个元素。
+> PackageElement：代表一个包名。 
+> TypeElement：代表一个类、接口、枚举。
+> ExecuteableElement：可以表示一个普通方法、构造方法、初始化方法（静态和实例）。
+> VariableElement：代表一个字段、枚举常量、方法或构造方法的参数、本地变量、或异常参数等。
+> Element：上述所有元素的父接口，代表源码中的每一个元素。
 
 
 ``` 
