@@ -1,5 +1,5 @@
 
-# 创建 annotation 的 Java 模块并配置
+# 一、创建 annotation 的 Java 模块并配置
 
 新建注解：
 ``` 
@@ -21,7 +21,7 @@ targetCompatibility = "7"
 
 ```
 
-# 创建 annotationCompiler 的 Java 模块并配置
+# 二、创建 annotationCompiler 的 Java 模块并配置
 
 ```
 @AutoService(Processor.class)//必须
@@ -79,7 +79,7 @@ targetCompatibility = "7"
 
 ```
 
-# 配置 app 的 android 模块
+# 三、配置 app （android 模块）
 
 build.gradle:
 
@@ -130,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
     }
 }
 ```
-# rebuild项目：
+# 四、rebuild项目：
 
 在app模块的 build/generated/source/apt/debug 可找到生成的类：
 
@@ -147,7 +147,7 @@ java中元注解有四个： @Retention @Target @Document @Inherited；
 @Retention(RetentionPolicy.CLASS)     // 默认的保留策略，注解会在class字节码文件中存在，但运行时无法获得，
 @Retention(RetentionPolicy.RUNTIME)  // 注解会在class字节码文件中存在，在运行时可以通过反射获取到
 
-　　
+
 @Target:注解的作用目标
 
 > @Target(ElementType.TYPE)   //接口、类、枚举、注解
