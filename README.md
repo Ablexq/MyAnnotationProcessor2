@@ -1,4 +1,8 @@
 
+参考：
+
+[基础篇：带你从头到尾玩转注解](https://blog.csdn.net/dd864140130/article/details/53875814)
+
 # 一、创建 annotation 的 Java 模块并配置
 
 新建注解：
@@ -169,6 +173,8 @@ java中元注解有四个： @Retention @Target @Document @Inherited；
 
 ``` 
 public abstract class AbstractProcessor implements Processor {
+        protected ProcessingEnvironment processingEnv;
+        private boolean initialized = false;
 }
 
 public interface Processor {
@@ -216,17 +222,44 @@ public interface Processor {
 public interface RoundEnvironment {
     boolean processingOver();
 
+    //上一轮注解处理器是否产生错误
     boolean errorRaised();
 
+    //返回上一轮注解处理器生成的根元素
     Set<? extends Element> getRootElements();
 
+    //返回包含指定注解类型的元素的集合
     Set<? extends Element> getElementsAnnotatedWith(TypeElement var1);
 
-    //返回使用给定注解类型注解的元素集合。
+    //返回包含指定注解类型的元素的集合。
     Set<? extends Element> getElementsAnnotatedWith(Class<? extends Annotation> var1);
 }
 ```
 
+# ProcessingEnvironment
+
+``` 
+public interface ProcessingEnvironment {
+    Map<String, String> getOptions();
+    
+    //Messager用来报告错误，警告和其他提示信息
+    Messager getMessager();
+    
+    //Filter用来创建新的源文件，class文件以及辅助文件
+    Filer getFiler();
+    
+    //Elements中包含用于操作Element的工具方法
+    //对于java源文件来说，Element代表程序元素：包，类，方法都是一种程序元素。
+    Elements getElementUtils();
+    
+    //Types中包含用于操作TypeMirror的工具方法
+    Types getTypeUtils();
+    
+    SourceVersion getSourceVersion();
+    
+    Locale getLocale();
+}
+```
 
 # Element
 
@@ -250,6 +283,7 @@ Element：
 
 ```
 
+#### Element
 ``` 
 public interface Element extends AnnotatedConstruct {
     TypeMirror asType();
@@ -289,6 +323,13 @@ public interface Element extends AnnotatedConstruct {
     <R, P> R accept(ElementVisitor<R, P> var1, P var2);
 }
 ```
+
+Element代表源代码，TypeElement代表的是源码中的类型元素，比如类。
+虽然我们可以从TypeElement中获取类名，TypeElement中不包含类本身的信息，
+比如它的父类，要想获取这信息需要借助TypeMirror，
+可以通过Element中的asType()获取元素对应的TypeMirror。
+
+
 #### ExecutableElement
 ``` 
 public interface ExecutableElement extends Element, Parameterizable {
