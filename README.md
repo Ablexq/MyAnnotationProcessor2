@@ -163,8 +163,155 @@ java中元注解有四个： @Retention @Target @Document @Inherited；
 
 @Inherited：说明子类可以继承父类中的该注解
 
+# AbstractProcessor
+
+参考：[利用APT实现Android编译时注解](https://blog.csdn.net/mcryeasy/article/details/52740041)
+
+``` 
+public abstract class AbstractProcessor implements Processor {
+}
+
+public interface Processor {
+    //指定哪些注解应该被注解处理器注册。
+    //可用@SupportedOptions({
+    //            "proxytool.ViewById",
+    //            "proxytool.OnClick"
+    //    }) 代替,考虑到兼容性问题，
+    //建议还是重写getSupportedSourceVersion方法和getSupportedAnnotationTypes方法
+    //它的返回值是一个String集合，包含了你的注解处理器想要处理的注解类型的全限定名。
+    Set<String> getSupportedOptions();
+
+    //指定哪些注解应该被注解处理器注册。
+    //可用@SupportedAnnotationTypes({
+    //            "proxytool.ViewById",
+    //            "proxytool.OnClick"
+    //    }) 代替，考虑到兼容性问题，
+    //建议还是重写getSupportedSourceVersion方法和getSupportedAnnotationTypes方法
+    //它的返回值是一个String集合，包含了你的注解处理器想要处理的注解类型的全限定名。
+    Set<String> getSupportedAnnotationTypes();
+
+    //用来指定你使用的 java 版本，通常我们返回SourceVersion.latestSupported()即可。
+    //可用 @SupportedSourceVersion(SourceVersion.RELEASE_7) 代替
+    SourceVersion getSupportedSourceVersion();
+
+    //通过processingEnv参数我们可以拿到一些实用的工具类Elements, Messager和Filer。
+    //Elements，一个用来处理Element的工具类。
+    //Messager，一个用来输出日志信息的工具类。
+    //Filer，使用这个类来创建文件。
+    void init(ProcessingEnvironment var1);
+
+    //这是注解处理器的主方法，你可以在这个方法里面编码实现扫描，处理注解，生成 java 文件。
+    //返回值 表示这组 annotations 是否被这个 Processor 接受，
+    //如果接受（true）后续子的 pocessor 不会再对这个 Annotations 进行处理
+    boolean process(Set<? extends TypeElement> var1, RoundEnvironment var2);
+
+    Iterable<? extends Completion> getCompletions(Element var1, AnnotationMirror var2, ExecutableElement var3, String var4);
+}
+```
+# RoundEnvironment
+
+[官方文档](http://www.cjsdn.net/Doc/JDK60/javax/annotation/processing/RoundEnvironment.html)
+
+``` 
+public interface RoundEnvironment {
+    boolean processingOver();
+
+    boolean errorRaised();
+
+    Set<? extends Element> getRootElements();
+
+    Set<? extends Element> getElementsAnnotatedWith(TypeElement var1);
+
+    //返回使用给定注解类型注解的元素集合。
+    Set<? extends Element> getElementsAnnotatedWith(Class<? extends Annotation> var1);
+}
+```
 
 
+# Element
+
+![](imgs/element.png)
+
+PackageElement：代表一个包名。
+TypeElement：代表一个类、接口、枚举。
+ExecuteableElement：可以表示一个普通方法、构造方法、初始化方法（静态和实例）。
+VariableElement：代表一个字段、枚举常量、方法或构造方法的参数、本地变量、或异常参数等。
+Element：上述所有元素的父接口，代表源码中的每一个元素。
 
 
+``` 
+public interface Element extends AnnotatedConstruct {
+    TypeMirror asType();
+
+    //返回element的类型，判断是哪种element，可查看 ElementKind 类
+    ElementKind getKind();
+
+    //获取修饰关键字,如：public static final等关键字
+    Set<Modifier> getModifiers();
+
+    //获取名字，不带包名
+    //getQualifiedName：获取带包名的名字
+    //Android框架层注解 if (qualifiedName.startsWith("android.")) {}
+    //   java框架层注解 if (qualifiedName.startsWith("java.")) {}
+    Name getSimpleName();
+
+    //返回该element的【父级element】，
+    //VariableElement，方法ExecutableElement的父级是TypeElemnt，
+    //而TypeElemnt的父级是PackageElment
+    Element getEnclosingElement();
+
+    //返回该元素的【子级element】,
+    //通常对一个PackageElement而言，它可以包含TypeElement；
+    //对于一个TypeElement而言，它可能包含属性VariableElement或者方法ExecutableElement,
+    List<? extends Element> getEnclosedElements();
+
+    boolean equals(Object var1);
+
+    int hashCode();
+
+    //返回直接存在于此元素上的注解。
+    List<? extends AnnotationMirror> getAnnotationMirrors();
+
+    //返回此元素针对指定类型的注解（如果存在这样的注解），否则返回 null。
+    <A extends Annotation> A getAnnotation(Class<A> var1);
+
+    <R, P> R accept(ElementVisitor<R, P> var1, P var2);
+}
+```
+#### ExecutableElement
+``` 
+public interface ExecutableElement extends Element, Parameterizable {
+    //获取方法的参数
+    List<? extends TypeParameterElement> getTypeParameters();
+
+    //获取方法的返回值
+    TypeMirror getReturnType();
+
+    List<? extends VariableElement> getParameters();
+
+    TypeMirror getReceiverType();
+
+    boolean isVarArgs();
+
+    boolean isDefault();
+
+    List<? extends TypeMirror> getThrownTypes();
+
+    AnnotationValue getDefaultValue();
+
+    Name getSimpleName();
+}
+```
+##### VariableElement:
+``` 
+public interface VariableElement extends Element {
+    //如果属性变量被final修饰，则可以使用该方法获取它的值
+    Object getConstantValue();
+
+    Name getSimpleName();
+
+    Element getEnclosingElement();
+}
+
+```
 
