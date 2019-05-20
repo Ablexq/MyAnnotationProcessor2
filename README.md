@@ -157,17 +157,24 @@ java中元注解有四个： @Retention @Target @Document @Inherited；
 @Target:注解的作用目标
 
 > @Target(ElementType.TYPE)   //接口、类、枚举、注解
-@Target(ElementType.FIELD) //字段、枚举的常量
-@Target(ElementType.METHOD) //方法
-@Target(ElementType.PARAMETER) //方法参数
-@Target(ElementType.CONSTRUCTOR)  //构造函数
-@Target(ElementType.LOCAL_VARIABLE)//局部变量
-@Target(ElementType.ANNOTATION_TYPE)//注解
-@Target(ElementType.PACKAGE) ///包   
 
-@Document：说明该注解将被包含在javadoc中
+> @Target(ElementType.FIELD) //字段、枚举的常量
 
-@Inherited：说明子类可以继承父类中的该注解
+> @Target(ElementType.METHOD) //方法
+
+> @Target(ElementType.PARAMETER) //方法参数
+
+> @Target(ElementType.CONSTRUCTOR)  //构造函数
+
+> @Target(ElementType.LOCAL_VARIABLE)//局部变量
+
+> @Target(ElementType.ANNOTATION_TYPE)//注解
+
+> @Target(ElementType.PACKAGE) ///包   
+
+> @Document：说明该注解将被包含在javadoc中
+
+> @Inherited：说明子类可以继承父类中的该注解
 
 # AbstractProcessor
 
@@ -213,7 +220,8 @@ public interface Processor {
     //如果接受（true）后续子的 pocessor 不会再对这个 Annotations 进行处理
     boolean process(Set<? extends TypeElement> var1, RoundEnvironment var2);
 
-    Iterable<? extends Completion> getCompletions(Element var1, AnnotationMirror var2, ExecutableElement var3, String var4);
+    Iterable<? extends Completion> getCompletions(Element var1, 
+                AnnotationMirror var2, ExecutableElement var3, String var4);
 }
 ```
 # RoundEnvironment
