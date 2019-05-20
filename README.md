@@ -3,6 +3,8 @@
 
 [基础篇：带你从头到尾玩转注解](https://blog.csdn.net/dd864140130/article/details/53875814)
 
+[javapoet github地址](https://github.com/square/javapoet)
+
 # 一、创建 annotation 的 Java 模块并配置
 
 新建注解：
